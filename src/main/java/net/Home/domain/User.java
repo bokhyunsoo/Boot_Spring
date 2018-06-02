@@ -1,5 +1,6 @@
 package net.Home.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,6 +11,8 @@ public class User {
 	@Id
 	@GeneratedValue
 	private Long Id;
+	
+	@Column(nullable=false, length=20, unique=true)
 	private String userId;
 	private String password;
 	private String name;
@@ -48,6 +51,12 @@ public class User {
 	public String toString() {
 		return "User [Id=" + Id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email="
 				+ email + "]";
+	}
+
+	public void update(User updatedUser) {
+		this.password = updatedUser.password;
+		this.name = updatedUser.name;
+		this.email = updatedUser.email;
 	}
 
 }
