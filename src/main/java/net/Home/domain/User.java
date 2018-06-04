@@ -22,6 +22,12 @@ public class User {
 	public User() {
 	}
 	
+	public Long getId() {
+		return Id;
+	}
+	public void setId(Long id) {
+		Id = id;
+	}
 	public String getUserId() {
 		return userId;
 	}
