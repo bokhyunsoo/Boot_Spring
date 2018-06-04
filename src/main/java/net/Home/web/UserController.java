@@ -1,5 +1,7 @@
 package net.Home.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,34 @@ public class UserController {
 	@GetMapping("/form")
 	public String form() {
 		return "/user/form";
+	}
+	
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session) {
+		
+		User user = userRepository.findByUserId(userId);
+		
+		if(user == null) {
+			return "redirect:/users/loginForm";
+		}
+		
+		if(!user.getPassword().equals(password)) {
+			return "redirect:/users/loginForm";
+		}
+		
+		session.setAttribute("sessionedUser", user);
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("sessionedUser");
+		return "redirect:/";
 	}
 	
 	@PostMapping("")
