@@ -31,7 +31,7 @@ public class UserController {
 		return "/user/login";
 	}
 	
-	@PostMapping("/login")
+	@PutMapping("/login")
 	public String login(String userId, String password, HttpSession session) {
 		
 		User user = userRepository.findByUserId(userId);
