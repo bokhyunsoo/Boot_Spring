@@ -42,7 +42,7 @@ public class QuestionController {
 			return "redirect:/users/loginForm";
 		}
 		
-		Question question = new Question(sessionedUser.getUserId() , title, contents);
+		Question question = new Question(sessionedUser , title, contents);
 		questionRepository.save(question);
 		return "redirect:/";
 	}

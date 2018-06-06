@@ -1,8 +1,14 @@
 package net.Home.domain;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Question {
@@ -10,16 +16,20 @@ public class Question {
 	@Id
 	@GeneratedValue
 	private Long Id;
-	private String writer;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	private User writer;
 	private String title;
-	private String contents; 
+	private String contents;
+	private LocalDateTime createDate;
 	
 	public Question() {}
 
-	public Question(String writer, String title, String contents) {
+	public Question(User writer, String title, String contents) {
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
+		this.createDate = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -30,11 +40,11 @@ public class Question {
 		Id = id;
 	}
 
-	public String getWriter() {
+	public User getWriter() {
 		return writer;
 	}
 
-	public void setWriter(String writer) {
+	public void setWriter(User writer) {
 		this.writer = writer;
 	}
 
@@ -54,5 +64,13 @@ public class Question {
 		this.contents = contents;
 	}
 	
+	public String getFormattedCreateDate() {
+		
+		if(createDate == null) {
+			return "";
+		}
+		
+		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+	}
 	
 }
