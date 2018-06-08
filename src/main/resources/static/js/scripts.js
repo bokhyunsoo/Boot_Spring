@@ -8,7 +8,7 @@ function addAnswer(e) {
 	console.log("query : " + queryString);
 	
 	var url = $(".answer-write").attr("action");
-	console.log("url :" +url);
+	console.log("url : " + url);
 	
 	$.ajax({
 		type : 'post',
@@ -16,78 +16,19 @@ function addAnswer(e) {
 		data : queryString,
 		dataType : 'json',
 		error : onError,
-		success : onSuccess
-	});
-	
+		success : onSuccess});
 }
 
-function onError(){
-	
-}
+function onError(){}
 
 function onSuccess(data, status){
 	console.log(data);
 	var answertemplate = $("#answerTemplate").html();
-	var template = answertemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.question.id ,data.id);
-	$("#comment").append(template);
+	var template = answertemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.question.Id, data.Id);
+	$(".comment").append(template);
 	
 	$("textarea[name=contents]").val("");
-	
 }
-
-$("a.link-delete-article").click(deleteAnswer);﻿﻿
-
-function deleteAnswer(e) {
-	e.preventDefault();
-	
-	var deleteBtn = $(this);
-	var url = deleteBtn.attr("href");
-	console.log("url : " + url);
-	
-	$.ajax({
-		type : 'delete',
-		url : url,
-		dataType : 'json',
-		error : function (xhr, status) {
-			console.log("error");
-		},
-		success : function (data, status) {
-			console.log(data);
-			if (data.valid) {
-				deleteBtn.closest("article").remove();
-			} else {
-				alert(data.errorMessage);
-			}
-		}
-	});
-	
-}
-
-$("link-modify-article").click(updateAnswer);
-
-function updateAnswer(e) {
-	e.preventDefault();
-	
-	var updateBtn = $(this);
-	var url = updateBtn.attr("href");
-	console.log("url : " + url);
-	
-	$.ajax({
-		type : 'update',
-		url : url,
-		dataType : 'json',
-		error : function (xhr, status) {
-			console.log("error");
-		},
-		success : function (data, status) {
-			console.log(data);
-			if (data.valid) {
-				
-			}
-		}
-	});
-}
-
 
 String.prototype.format = function() {
 	  var args = arguments;

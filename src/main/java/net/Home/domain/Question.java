@@ -14,24 +14,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class Question {
 	
 	@Id
 	@GeneratedValue
+	@JsonProperty
 	private Long Id;
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	@JsonProperty
 	private User writer;
 	
 	@OneToMany(mappedBy="question")
 	@OrderBy("id ASC")
 	private List<Answer> answers;
 	
+	@JsonProperty
 	private String title;
 	
 	@Lob
+	@JsonProperty
 	private String contents;
+	@JsonProperty
 	private LocalDateTime createDate;
 	
 	public Question() {}
