@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import net.Home.domain.Question;
 import net.Home.domain.QuestionRepository;
+import net.Home.domain.Result;
 import net.Home.domain.User;
 import net.Home.domain.UserRepository;
 
@@ -62,59 +63,60 @@ public class QuestionController {
 	@GetMapping("/{Id}/form")
 	public String updateForm(@PathVariable Long Id, Model model, HttpSession session) {
 
-		try {
 			Question question = questionRepository.findOne(Id);
-			hasPermission(session, question);
-			model.addAttribute("questions", question);
-			return "/qna/updateForm";
-		} catch (IllegalStateException e) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "/user/login";
-		}
-
+			Result result = valid(session, question);
+			
+			if(!result.isValid()) {
+				model.addAttribute("errorMessage", result.getErrorMessage());
+				return "/user/login";
+			}
+				model.addAttribute("questions", question);
+				return "/qna/updateForm";
 	}
 
 	@PutMapping("/{Id}")
 	public String update(@PathVariable Long Id, String title, String contents, HttpSession session, Model model) {
 
-		try {
 			Question question = questionRepository.findOne(Id);
-			hasPermission(session, question);
-			question.update(title, contents);
-			questionRepository.save(question);
-			return String.format("redirect:/questions/%d", Id);
-		} catch (IllegalStateException e) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "/user/login";
-		}
+			Result result = valid(session, question);
+			
+			if(!result.isValid()) {
+				model.addAttribute("errorMessage", result.getErrorMessage());
+				return "/user/login";
+			}
+				question.update(title, contents);
+				questionRepository.save(question);
+				return String.format("redirect:/questions/%d", Id);
 	}
 
 	@DeleteMapping("/{Id}")
 	public String delete(@PathVariable Long Id, HttpSession session, Model model) {
 
-		try {
 			Question question = questionRepository.findOne(Id);
-			hasPermission(session, question);
+			Result result = valid(session, question);
+			
+			if(!result.isValid()) {
+				model.addAttribute("errorMessage", result.getErrorMessage());
+				return "/user/login";
+			}
+			
 			questionRepository.delete(Id);
 			return "redirect:/";
-		} catch (IllegalStateException e) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "/user/login";
-		}
 	}
-
-	private boolean hasPermission(HttpSession session, Question question) {
-
+	
+	private Result valid(HttpSession session, Question question) {
+		
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			throw new IllegalStateException("로그인이 필요합니다.");
+			return Result.fail("로그인이 필요합니다.");
 		}
 
 		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
 
 		if (!question.isSameWriter(sessionedUser)) {
-			throw new IllegalStateException("자신이 쓴 글만 수정, 삭제가 가능합니다.");
+			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
 		}
-
-		return true;
+		
+		return Result.ok();
 	}
+	
 }
