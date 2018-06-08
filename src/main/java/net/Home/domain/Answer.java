@@ -84,5 +84,12 @@ public class Answer {
 		return "Answer [Id=" + Id + ", writer=" + writer + ", contents=" + contents + ", createDate=" + createDate
 				+ "]";
 	}
+
+	public boolean isSameWriter(User sessionedUser) {
+		if(!this.writer.equals(sessionedUser)) {
+			return false;			
+		}
+		return this.writer.equals(sessionedUser);
+	}
 	
 }
