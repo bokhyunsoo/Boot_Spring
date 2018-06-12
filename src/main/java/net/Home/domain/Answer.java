@@ -13,12 +13,7 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-public class Answer {
-	
-	@Id
-	@GeneratedValue
-	@JsonProperty
-	private Long Id;
+public class Answer extends AbstractEntity{
 	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
@@ -33,9 +28,6 @@ public class Answer {
 	@JsonProperty
 	private String contents;
 	
-	@JsonProperty
-	private LocalDateTime createDate;
-	
 	
 	public Answer() {}
 
@@ -43,24 +35,6 @@ public class Answer {
 		this.writer = writer;
 		this.question = question;
 		this.contents = contents;
-		this.createDate = LocalDateTime.now();
-	}
-	
-	public String getFormattedCreateDate() {
-		
-		if(createDate == null) {
-			return "";
-		}
-		
-		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-	}
-
-	public Long getId() {
-		return Id;
-	}
-
-	public void setId(Long id) {
-		Id = id;
 	}
 
 	public User getWriter() {
@@ -83,8 +57,7 @@ public class Answer {
 
 	@Override
 	public String toString() {
-		return "Answer [Id=" + Id + ", writer=" + writer + ", contents=" + contents + ", createDate=" + createDate
-				+ "]";
+		return "Answer [" + super.toString() + ", writer=" + writer + ", contents=" + contents + "]";
 	}
 
 	public boolean isSameWriter(User sessionedUser) {
