@@ -37,6 +37,7 @@ public class ApiAnswerController {
 
 		Question question = questionRepository.findOne(questionId);
 		Answer answer = new Answer(sessionedUser, question, contents);
+		question.addAnswer();
 		return answerRepository.save(answer);
 	}
 
@@ -55,6 +56,9 @@ public class ApiAnswerController {
 		}
 
 		answerRepository.delete(Id);
+		Question question = questionRepository.findOne(questionId);
+		question.deleteAnswer();
+		questionRepository.save(question);
 		return Result.ok();
 	}
 }

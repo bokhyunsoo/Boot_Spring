@@ -41,6 +41,9 @@ public class Question {
 	@JsonProperty
 	private LocalDateTime createDate;
 	
+	@JsonProperty
+	private Integer countOfAnswer = 0;
+	
 	public Question() {}
 
 	public Question(User writer, String title, String contents) {
@@ -104,6 +107,14 @@ public class Question {
 		
 		return this.writer.equals(sessionedUser);
 		
+	}
+
+	public void addAnswer() {
+		this.countOfAnswer +=1;
+	}
+	
+	public void deleteAnswer() {
+		this.countOfAnswer -=1;
 	}
 	
 }
